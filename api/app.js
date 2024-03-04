@@ -4,8 +4,9 @@ const morgan = require('morgan'); //request logs (middleware)
 const bodyParser = require('body-parser');
 
 
-const productsRoutes = require('./routes/products');
+const productsRoutes = require('./routes/ProductsRoute');
 const orderRoutes = require('./routes/orders');
+const homeRoutes = require('./routes/home');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -17,12 +18,15 @@ app.use((req, res, next) =>{
     if(req.method === 'OPTIONS'){
         res.header('Acess-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
+    }else{
+        next(); //entender ** 
     }
 });
 
 
-app.use('/produtos', productsRoutes);
+app.use(productsRoutes);
 app.use('/pedidos', orderRoutes);
+app.use('/', homeRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
