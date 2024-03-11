@@ -3,12 +3,25 @@ const app = express();
 const morgan = require('morgan'); //request logs (middleware)
 const bodyParser = require('body-parser');
 
+const path = require('path'); //provisorio
 
 const productsRoutes = require('./routes/ProductsRoute');
-const orderRoutes = require('./routes/orders');
-const homeRoutes = require('./routes/home');
+const orderRoutes = require('./routes/OrdersRoute');
+const loginRoutes = require('./routes/login');
+const registerRoutes = require('./routes/register');
+
+
 
 app.use(morgan('dev'));
+
+const publicDirectory = path.join(__dirname, ); //provisorio
+app.use(express.static(publicDirectory));
+
+app.use(express.urlencoded({ extended: false })); //obter dados do form
+app.use(express.json());
+
+app.set('view engine', 'hbs'); //provisorio
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -26,7 +39,9 @@ app.use((req, res, next) =>{
 
 app.use(productsRoutes);
 app.use('/pedidos', orderRoutes);
-app.use('/', homeRoutes);
+app.use('/', loginRoutes);
+app.use('/register', registerRoutes);
+app.use('/auth', require('./routes/auth'))
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
