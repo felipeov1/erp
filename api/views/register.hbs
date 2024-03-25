@@ -9,15 +9,26 @@
 
 <body>
     <h1>Registro</h1>
+    {{#if message}}
+        <h4 class="alert alert-danger mt-4">{{message}}</h4>
+    {{/if}}
     <div>
         <form action="/auth/register" method="POST">
             <div>
-                <label for="email">E-mail</label>
-                <input type="text" id="email">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name">
             </div>
             <div>
-                <label for="senha">Senha</label>
-                <input type="text" id="senha">
+                <label for="email">E-mail</label>
+                <input type="text" name="email" id="email">
+            </div>
+            <div>
+                <label for="password">Senha</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <div>
+                <label for="password">Confirmar Senha</label>
+                <input type="password" name="passwordConfirm" id="passwordConfirm">
             </div>
             <div>
                 <input type="submit">

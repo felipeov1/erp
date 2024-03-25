@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan'); //request logs (middleware)
 const bodyParser = require('body-parser');
-
 const path = require('path'); //provisorio
+
 
 const productsRoutes = require('./routes/ProductsRoute');
 const orderRoutes = require('./routes/OrdersRoute');
@@ -11,19 +11,16 @@ const loginRoutes = require('./routes/login');
 const registerRoutes = require('./routes/register');
 
 
-
 app.use(morgan('dev'));
 
 const publicDirectory = path.join(__dirname, ); //provisorio
 app.use(express.static(publicDirectory));
 
-app.use(express.urlencoded({ extended: false })); //obter dados do form
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false })); //obter dados do form
+app.use(bodyParser.json())
 
 app.set('view engine', 'hbs'); //provisorio
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 app.use((req, res, next) =>{
     res.header('Acess-Control-Allow-Origin', '*');
