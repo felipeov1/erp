@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser')
 const app = express();
 const morgan = require('morgan'); //request logs (middleware)
 const bodyParser = require('body-parser');
@@ -7,11 +8,13 @@ const path = require('path'); //provisorio
 
 const productsRoutes = require('./routes/ProductsRoute');
 const orderRoutes = require('./routes/OrdersRoute');
-const loginRoutes = require('./routes/login');
-const registerRoutes = require('./routes/register');
+const loginRoutes = require('./routes/LoginRoute');
+const registerRoutes = require('./routes/RegisterRoute');
 
 
 app.use(morgan('dev'));
+
+// app.use(cookieParser);
 
 const publicDirectory = path.join(__dirname, ); //provisorio
 app.use(express.static(publicDirectory));
@@ -36,9 +39,10 @@ app.use((req, res, next) =>{
 
 app.use(productsRoutes);
 app.use('/pedidos', orderRoutes);
-app.use('/', loginRoutes);
+app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
-app.use('/auth', require('./routes/auth'))
+app.use('/RegisterAuthRoute', require('./routes/RegisterAuthRoute'))
+app.use('/LoginAuthRoute', require('./routes/LoginAuthRoute'))
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

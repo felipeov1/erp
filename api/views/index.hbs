@@ -9,20 +9,23 @@
 
 <body>
     <h1>Login</h1>
+    {{#if message}}
+    <h4 class="alert alert-danger mt-4">{{message}}</h4>
+    {{/if}}
     <div>
-        <form>
+        <form action="/LoginAuthRoute/login" method="POST">
             <div>
                 <label for="email">E-mail</label>
                 <input type="text" name="email" id="email">
             </div>
             <div>
-                <label for="senha">Senha</label>
-                <input type="password" name="senha" id="senha">
+                <label for="password">Senha</label>
+                <input type="password" name="password" id="password">
             </div>
             <div>
                 <input type="submit">
             </div>
-            <a href="/register">Registrar</a>
+            <a href="/">Voltar</a>
         </form>
     </div>
 </body>
