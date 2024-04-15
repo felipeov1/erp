@@ -1,34 +1,30 @@
 const db = require('../config/connection');
+const jwt = require('jsonwebtoken');
 
 exports.login = (req, res) => {
 
-    const { email, password } = req.body
+  const { email, password } = req.body
 
-    db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (error, result) => {
+  db.query('SELECT * FROM usuarios WHERE Email = ?', [email], async (error, result) => {
 
-        if (error) {
-            console.log(error);
-        }
+    if (email == result[0].Email || password == result[0].Senha) {
+      //auth ok
+      const id = result[0].IDUsuario; //esse id viria do banco de dados
+      const token = jwt.sign({ id }, process.env.SECRET, {
+        expiresIn: 1 // expires in 5min
+      });
 
-        // if (email == result) {
-        //     return res.render('index', {
-        //         message: 'email e senha corretos'
-        //     });
-        // }
-        // if (password == result) {
-        //     return res.render('index', {
-        //         message: 'email e senha corretos'
-        //     });
-        // }
+      res.cookie("token", token, {
+        httpOnly: true,
+        //secure: true, // Descomente esta linha se estiver usando HTTPS
+        //maxAge: 3600000, // 1 hora em milissegundos
+      });
 
-        let results = JSON.parse(JSON.stringify(result)) 
+      return res.render('home');
+    }
 
-        return console.log(results[1])
-        // return res.render('index', {
-        //     message: 'email e senha corretos'
-        // });
+    res.render('index')
 
 
-
-    })
+  })
 }
