@@ -9,11 +9,13 @@ require("dotenv-safe").config();
 
 
 
-const productsRoutes = require('./routes/ProductsRoute');
-const orderRoutes = require('./routes/OrdersRoute');
-const loginRoutes = require('./routes/LoginRoute');
-const registerRoutes = require('./routes/RegisterRoute');
-const homeRoutes = require('./routes/homeRoute');
+const productsRoute = require('./routes/ProductsRoute');
+const orderRoute = require('./routes/OrdersRoute');
+const loginRoute = require('./routes/LoginRoute');
+const registerRoute = require('./routes/RegisterRoute');
+const homeRoute = require('./routes/homeRoute');
+const inventoryRoute = require('./routes/inventoryRoute');
+
 
 app.use(morgan('dev'));
 
@@ -29,37 +31,48 @@ app.use(bodyParser.json())
 app.set('view engine', 'hbs'); //provisorio
 
 
-// app.use((req, res, next) =>{
-//     res.header('Acess-Control-Allow-Origin', '*');
-//     res.header('Acess-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-//     if(req.method === 'OPTIONS'){
-//         res.header('Acess-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-//         return res.status(200).json({});
-//     }else{
-//         next(); //entender ** 
-//     }
-// });
+// Middleware para tratamento de requisições OPTIONS
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    res.status(200).end();
+});
 
-app.use('/',  loginRoutes);
+// Middleware para adicionar cabeçalhos CORS a todas as requisições
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+});
+
+app.use('/', loginRoute);
 app.use('/LoginAuthRoute', require('./routes/LoginAuthRoute'));
 
-app.use('/register', registerRoutes);
+app.use('/register', registerRoute);
 app.use('/RegisterAuthRoute', require('./routes/RegisterAuthRoute'));
 
-app.use(productsRoutes);
-app.use('/pedidos', orderRoutes);
+app.use(productsRoute);
+app.use('/pedidos', orderRoute);
 
-app.use('/home', verifyJWT,  homeRoutes)
+app.use('/home', verifyJWT, homeRoute);
+
+app.use('/inventory', verifyJWT, inventoryRoute);
 
 
 function verifyJWT(req, res, next) {
-    const token = req.headers['authorization'];
+    const token = req.cookies.token; // Obter o token do cookie
     if (!token) return res.status(401).json({ auth: false, message: 'No token provided. ' });
 
-    jwt.verify(token, process.env.SECRET, function (err, decoded){
+    jwt.verify(token, process.env.SECRET, function (err, decoded) {
         if (err) return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' })
 
         req.userId = decoded.id;
+
+        res.cookie("token", token, {
+            httpOnly: true,
+        });
+
         next();
     });
 };

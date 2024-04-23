@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="testBtn">Test Request</button>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', function () {
+            // Make a fetch request to the server
+            fetch('/inventory/getDataInventory')
+                .then(response => {
+                    // Check if the response is successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Parse the JSON response
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle the JSON data
+                    console.log('Data received from server:', data);
+
+                    // Now you can use the data as needed, for example:
+                    // Update the UI with the received data
+                    // Process the data further
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
