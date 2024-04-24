@@ -12,23 +12,17 @@
 
     <script>
         document.getElementById('testBtn').addEventListener('click', function () {
-            // Make a fetch request to the server
-            fetch('/inventory/getDataInventory')
+
+            fetch('/inventory/getData')
                 .then(response => {
-                    // Check if the response is successful
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    // Parse the JSON response
                     return response.json();
                 })
-                .then(data => {
-                    // Handle the JSON data
-                    console.log('Data received from server:', data);
+                .then(dataInventory  => {
+                    console.log('Data received from server:', dataInventory );
 
-                    // Now you can use the data as needed, for example:
-                    // Update the UI with the received data
-                    // Process the data further
                 })
                 .catch(error => {
                     // Handle errors

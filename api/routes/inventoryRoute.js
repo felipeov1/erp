@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const getDataInventory = require('../controllers/InventoryController');
 const path = require('path');
 
-const InventoryController = require('../controllers/InventoryController');
+
 
 router.get('/', (req, res, next)=>{
     const filePath = path.join(__dirname, '../views/inventory.hbs');
     res.render(filePath);
 });
 
-app.get('/getInventory', (req, res) =>{
-    
-})
+router.get('/getData', getDataInventory.getDataInventory);
+
+
+
 
 
 

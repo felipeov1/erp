@@ -1,5 +1,7 @@
 const db = require('../config/connection');
 
+
+
 exports.getDataInventory = (req, res) => {
 
     db.query('SELECT * FROM datas.inventory', (error, result) => {
